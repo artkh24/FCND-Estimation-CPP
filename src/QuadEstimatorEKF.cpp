@@ -89,18 +89,34 @@ void QuadEstimatorEKF::UpdateFromIMU(V3F accel, V3F gyro)
   //       (Quaternion<float> also has a IntegrateBodyRate function, though this uses quaternions, not Euler angles)
 
   ////////////////////////////// BEGIN STUDENT CODE ///////////////////////////
-  // SMALL ANGLE GYRO INTEGRATION:
+   // SMALL ANGLE GYRO INTEGRATION:
   // (replace the code below)
   // make sure you comment it out when you add your own code -- otherwise e.g. you might integrate yaw twice
 
-  float predictedPitch = pitchEst + dtIMU * gyro.y;
-  float predictedRoll = rollEst + dtIMU * gyro.x;
-  ekfState(6) = ekfState(6) + dtIMU * gyro.z;	// yaw
+//  float predictedPitch = pitchEst + dtIMU * gyro.y;
+//  float predictedRoll = rollEst + dtIMU * gyro.x;
+//  ekfState(6) = ekfState(6) + dtIMU * gyro.z;    // yaw
+//
+//  // normalize yaw to -pi .. pi
+//
 
-  // normalize yaw to -pi .. pi
-  if (ekfState(6) > F_PI) ekfState(6) -= 2.f*F_PI;
-  if (ekfState(6) < -F_PI) ekfState(6) += 2.f*F_PI;
-
+    
+    Quaternion<float> qt;
+    Quaternion<float> dq;
+    qt.FromEuler123_RPY(rollEst, pitchEst, ekfState(6));
+    dq.FromEuler123_RPY(gyro.x, gyro.y, gyro.z);
+    
+    Quaternion<float> qt_bar = dq*qt;
+    
+    float theta_bar = qt_bar.Pitch();
+    float phi_bar = qt_bar.Roll();
+    
+    float predictedPitch = theta_bar + dtIMU * gyro.y;
+    float predictedRoll = phi_bar + dtIMU * gyro.x;
+    
+    ekfState(6) = qt_bar.Yaw() + dtIMU * gyro.z;    // yaw
+    if (ekfState(6) > F_PI) ekfState(6) -= 2.f*F_PI;
+    if (ekfState(6) < -F_PI) ekfState(6) += 2.f*F_PI;
   /////////////////////////////// END STUDENT CODE ////////////////////////////
 
   // CALCULATE UPDATE
