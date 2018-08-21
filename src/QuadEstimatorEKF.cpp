@@ -96,25 +96,23 @@ void QuadEstimatorEKF::UpdateFromIMU(V3F accel, V3F gyro)
 //  float predictedPitch = pitchEst + dtIMU * gyro.y;
 //  float predictedRoll = rollEst + dtIMU * gyro.x;
 //  ekfState(6) = ekfState(6) + dtIMU * gyro.z;    // yaw
-//
-//  // normalize yaw to -pi .. pi
-//
+//  if (ekfState(6) > F_PI) ekfState(6) -= 2.f*F_PI;
+//  if (ekfState(6) < -F_PI) ekfState(6) += 2.f*F_PI;
+
+    
 
     
     Quaternion<float> qt;
     Quaternion<float> dq;
-    qt.FromEuler123_RPY(rollEst, pitchEst, ekfState(6));
-    dq.FromEuler123_RPY(gyro.x, gyro.y, gyro.z);
-    
-    Quaternion<float> qt_bar = dq*qt;
-    
-    float theta_bar = qt_bar.Pitch();
-    float phi_bar = qt_bar.Roll();
-    
-    float predictedPitch = theta_bar + dtIMU * gyro.y;
-    float predictedRoll = phi_bar + dtIMU * gyro.x;
-    
-    ekfState(6) = qt_bar.Yaw() + dtIMU * gyro.z;    // yaw
+    qt = qt.FromEuler123_RPY(rollEst, pitchEst, ekfState(6));
+
+
+    Quaternion<float> qt_bar = dq.IntegrateBodyRate(gyro, dtIMU) * qt;
+
+    float predictedPitch = qt_bar.Pitch();
+    float predictedRoll = qt_bar.Roll();
+    ekfState(6) = qt_bar.Yaw();
+
     if (ekfState(6) > F_PI) ekfState(6) -= 2.f*F_PI;
     if (ekfState(6) < -F_PI) ekfState(6) += 2.f*F_PI;
   /////////////////////////////// END STUDENT CODE ////////////////////////////
