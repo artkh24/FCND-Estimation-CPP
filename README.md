@@ -2,15 +2,13 @@
 ### Derek Lukacs ###
 
 ## Overview ##
-should include a statement and supporting figures / images that explain how each rubric item was addressed, and specifically where in the code each step was handled.
+This project involved the creation and implementation of an Extended Kalman Filter (EKF) to predict a quadrotors state. This was done as a part of the Udacity Flying Car Nanodegree (FCND) program.
 
+The estimation scheme for this system is broken down into 
 
-Supporting figures:
-- table of gains and tuned values
-- images from each scenario plot
-- table of scenario performance
-- overview diagram of code
-- gifs of the simulations
+<img src="https://github.com/dereklukacs/FCND-Estimation-CPP/blob/master/images/Figures/EKF_algorithm_pseudocode.png?raw=true"
+     alt="EKF Pseudocode" />
+
 
 ## Understanding the Sensor Data ##
 
@@ -18,7 +16,7 @@ In order to determine the standard deviation of the measurement noise of both GP
 
 The GPS data sample had a standard deviation of 0.7157 cm and the Accelerometer data sample had a standard deviation of 0.5121 cm/s/s. These values were put into the simulation to confirm that approximately 68% of the data fell within 1 standard deviation, these are the white lines shown in the plots of the simulation below. 
 
-This test was passed with 70% of the accelerometer data falling within 1 standard deviation and 68% of GPS falling within 1 standard deviation.
+This test was passed with 70% of the accelerometer data falling within 1 standard deviation and 68% of GPS falling within 1 standard deviation. Both of these values are very close to Gaussian.
 <img src="https://github.com/dereklukacs/FCND-Estimation-CPP/blob/master/images/Gifs/Scen6_after.gif?raw=true"
      alt="Scene 6 Simulation" />
 
@@ -55,6 +53,17 @@ The error in the simulation (below) after this change has been implemented can b
 
 ## Prediction Step of EKF ##
 **Implement all of the elements of the prediction step for the estimator.**
+
+The state prediction is handled in `PredictState()` and the covariance prediction is handled in `Predict()`.
+
+#### PredictState() ####
+
+This function follows the pseudocode algorithm outlined below. The predicted state is essentially all of the state variables predicted with an integration step. This is defined by the transition function, _g_.
+
+<img src="https://github.com/dereklukacs/FCND-Estimation-CPP/blob/master/images/Figures/EKF_transition_function.png?raw=true"
+     alt="Transition Function" />
+
+
 
 ?? overview figure of predicton step??
 	The Rgb' matrix was constructed by taking the partial derivative of each element with respect to $\psi$
