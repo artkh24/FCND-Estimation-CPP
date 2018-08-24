@@ -52,7 +52,6 @@ The error in the simulation (below) after this change has been implemented can b
 
 
 ## Prediction Step of EKF ##
-**Implement all of the elements of the prediction step for the estimator.**
 
 The state prediction is handled in `PredictState()` and the covariance prediction is handled in `Predict()`.
 
@@ -60,18 +59,18 @@ The state prediction is handled in `PredictState()` and the covariance predictio
 
 This function follows the pseudocode algorithm outlined below. The predicted state is essentially all of the state variables predicted with an integration step. This is defined by the transition function, _g_.
 
-<img src="https://github.com/dereklukacs/FCND-Estimation-CPP/blob/master/images/Figures/EKF_transition_function.png?raw=true"
+<img src="https://github.com/dereklukacs/FCND-Estimation-CPP/blob/master/images/Figures/transition_function.png?raw=true"
      alt="Transition Function" />
 
+<img src="https://github.com/dereklukacs/FCND-Estimation-CPP/blob/master/images/Figures/Predict_State.png?raw=true"
+     alt="Diagram of Predict State function" />
 
 
-?? overview figure of predicton step??
-	The Rgb' matrix was constructed by taking the partial derivative of each element with respect to $\psi$
+An important thing to note is that the yaw value is not altered but is instead passed through from the complementary filter step. 
 
-	The state covariance was updated by
+Changes to the covariance were calculated using the algorithm outlined in the EKF pseudocode. The previous covariance is premultiplied by the derivative of the transition function and post multiplied by the transpose of the derivative of the transition function. Added to this is the process bias, Q<sub>t</sub>.
 
-	??Predict() and PredictState() discussion??
-
+Below are two simulations that test the performance of the prediction step. 
 
 <img src="https://github.com/dereklukacs/FCND-Estimation-CPP/blob/master/images/Gifs/Scen8_after.gif?raw=true"
      alt="Scene 8 Simulation" />
