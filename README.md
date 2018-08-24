@@ -68,7 +68,9 @@ This function follows the pseudocode algorithm outlined below. The predicted sta
 
 An important thing to note is that the yaw value is not altered but is instead passed through from the complementary filter step. 
 
-Changes to the covariance were calculated using the algorithm outlined in the EKF pseudocode. The previous covariance is premultiplied by the derivative of the transition function and post multiplied by the transpose of the derivative of the transition function. Added to this is the process bias, Q<sub>t</sub>.
+
+#### Predict() ####
+Changes to the covariance were calculated using the algorithm outlined in the EKF pseudocode. The previous covariance is premultiplied by the derivative of the transition function and post multiplied by the transpose of the derivative of the transition function. Added to this is the transition model covariance, Q<sub>t</sub>.
 
 Below are two simulations that test the performance of the prediction step. 
 
@@ -79,6 +81,9 @@ Below are two simulations that test the performance of the prediction step.
      alt="Scene 9 Simulation" />
 
 ## Update Step of EKF ##
+
+The main aspect of developing an EKF update step is to create an accurate measurement model h, and its derivative h'.
+
 **Implement the magnetometer update.**
 	Measured the short way around by constraining the value of the error
 
