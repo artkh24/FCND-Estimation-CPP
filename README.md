@@ -1,10 +1,18 @@
 # Udacity Flying Car Nanodegree Project 4: Estimation of a Quadrotor #
-### Derek Lukacs ###
+###### Writeup by Derek Lukacs ######
 
 ## Overview ##
 This project involved the creation and implementation of an Extended Kalman Filter (EKF) to predict a quadrotors state. This was done as a part of the Udacity Flying Car Nanodegree (FCND) program.
 
-The estimation scheme for this system is broken down into 
+Instead of having a full 12 variable kalman filter to predict all 12 3D states of the vehicle, a 7 variable EKF was used instead. To simplify the system, first the body rates of the vehicle were used as prediction input instead of a state variable. These were used in a complementary filter that predicts the roll and pitch angles. 
+
+Another simplification is the use of the IMU in the prediction step instead of in the update step. 
+
+The results of this estimation was a quadrotor that could loosely follow the planned trajectory. More tuning will be needed to improve the effectiveness with which the vehicle follows the trajectory.
+
+The success in the estimation is that it is capable of high accuracy state estimation compared to the actual values. 
+
+Below is the pseudocode for the EKF algorithm as it was implemented. The primary work done was to define the transition and measurement models g and h, and their derivatives g' and h'. 
 
 <img src="https://github.com/dereklukacs/FCND-Estimation-CPP/blob/master/images/Figures/EKF_algorithm_pseudocode.png?raw=true"
      alt="EKF Pseudocode" />
@@ -84,27 +92,27 @@ Below are two simulations that test the performance of the prediction step.
 
 The main aspect of developing an EKF update step is to create an accurate measurement model h, and its derivative h'.
 
-**Implement the magnetometer update.**
-	Measured the short way around by constraining the value of the error
+#### GPS Update ####
 
-	Used the ??following?? measurement model and implemented in code.
-
-	??gif of before and after??
+<img src="https://github.com/dereklukacs/FCND-Estimation-CPP/blob/master/images/Figures/GPS_update.png?raw=true"
+     alt="GPS Update diagram" />
 
 
-**Implement the GPS update.**
+The GPS update step follows the EKF algorithm and corrects the prediction on position and velocity. 
 
-	??GPS measurement model??
 
-	?? GPS before and after??
+<img src="https://github.com/dereklukacs/FCND-Estimation-CPP/blob/master/images/Gifs/Scen11_after.gif?raw=true"
+     alt="Scene 11 Simulation" />
 
-**Detuning controller**
+#### Magnetometer Update ####
+The magnetometer update is similar to GPS update except there is a different measurement model. This measurement model was implemented and the state is updated. Below is the simulation that tests the effectiveness of the yaw estimate with the magnetometer sensor data used to update the prediction. 
 
 <img src="https://github.com/dereklukacs/FCND-Estimation-CPP/blob/master/images/Gifs/Scen10_after.gif?raw=true"
      alt="Scene 10 Simulation" />
 
-<img src="https://github.com/dereklukacs/FCND-Estimation-CPP/blob/master/images/Gifs/Scen11_after.gif?raw=true"
-     alt="Scene 11 Simulation" />
+
+#### Detuning controller ####
+In order for the quadrotor to function with the imperfect estimation data, the controller gain parameters were "detuned." This allows realistic performance. All of the simulations shown in this document were recorded when the controller had been detuned and with the flight controller built in the previous project. 
 
 ## Future Work ##
 
