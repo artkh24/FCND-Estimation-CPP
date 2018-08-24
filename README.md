@@ -8,11 +8,19 @@ Supporting figures:
 	 - overview diagram of code
 	 - gifs of the simulations
 
+## Understanding the Sensor Data ##
 
 **Determine the standard deviation of the measurement noise of both GPS X data and Accelerometer X data.**
 
 	This was completed by importing the data into matlab and calculating the standard deviation of the measured data is the std(data) function.
 
+<img src="../images/Gifs/Scen6_after.gif"
+     alt="Scene 6 Simulation"
+     style="float: left; margin-right: 10px;" />
+
+
+
+## Perfecting the Complementary Filter ##
 **Implement a better rate gyro attitude integration scheme in the UpdateFromIMU() function.**
 
 	The integration scheme was improved by performing the integration in the nonlinear quaternion space. 
@@ -25,7 +33,7 @@ Supporting figures:
 
    This satisfied that requirements of 0.1 radian accuracy for 3 seconds in the simulation.
 
-
+## Prediction Step of EKF ##
 **Implement all of the elements of the prediction step for the estimator.**
 	?? overview figure of predicton step??
 	The Rgb' matrix was constructed by taking the partial derivative of each element with respect to $\psi$
@@ -35,6 +43,7 @@ Supporting figures:
 	??Predict() and PredictState() discussion??
 
 
+## Update Step of EKF ##
 **Implement the magnetometer update.**
 	Measured the short way around by constraining the value of the error
 
